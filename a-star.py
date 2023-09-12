@@ -1,7 +1,7 @@
 import sys
-from math import radians, cos, sin, asin, sqrt
-from typing import List
+from math import asin, cos, radians, sin, sqrt
 from queue import PriorityQueue
+from typing import List
 
 
 # Data class Route that store route information from map.txt file
