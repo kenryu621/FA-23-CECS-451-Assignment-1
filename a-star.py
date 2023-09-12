@@ -1,5 +1,6 @@
 import sys
 from math import radians, cos, sin, asin, sqrt
+from typing import List, Tuple
 
 
 def create_coord_dict(city1: str, city2: str, coord_dict):
@@ -18,7 +19,6 @@ def create_coord_dict(city1: str, city2: str, coord_dict):
                 city1_found = True
             if city_name == city2:
                 city2_found = True
-    coord_file.close()
     # Returning result
     if city1_found and city2_found:
         return True
@@ -54,14 +54,29 @@ def read_coord(search_city: str, coord_dict):
                 else:
                     coord_dict[city_name] = coordinate
                     return coordinate
-        coord_file.close()
         return False
     else:
         return coord_dict[search_city]
 
 
+def read_map(search_city: str) -> List[Tuple[str, float]]:
+    print(f"\nReading paths from {search_city}...")
+    path_tuples = []
+    with open("map.txt", "r") as map_file:
+        for map_line in map_file:
+            start_city_name, paths_str = map_line.split("-")
+            if start_city_name == search_city:
+                paths = paths_str.replace("\n", "").split(",")
+                for path in paths:
+                    end_city_name, distance = path.strip("()").split("(")
+                    path_tuples.append((end_city_name, float(distance)))
+    print(f"    {path_tuples}")
+    return path_tuples
+
+
 def a_star(departure: str, arrival: str, distance_dict):
-    print(f"{departure} to {arrival}")
+    print(f"Running A* search from {departure} to {arrival}...")
+    read_map(departure)
 
 
 def main():
