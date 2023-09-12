@@ -2,6 +2,7 @@ import sys
 from math import asin, cos, radians, sin, sqrt
 from queue import PriorityQueue
 from typing import List
+import copy
 
 
 # Data class Route that store route information from map.txt file
@@ -77,7 +78,7 @@ def read_map(search_city: str) -> List[Route]:
 def a_star(departure: str, arrival: str, distance_dict) -> [str, float]:
     # Initial state from departure city
     city_queue = PriorityQueue()
-    city_queue.put(departure, 0)
+    city_queue.put((0, departure))
     last_stop = {}
     cost_so_far = {}
     last_stop[departure] = None
@@ -85,7 +86,7 @@ def a_star(departure: str, arrival: str, distance_dict) -> [str, float]:
     # Starting route search
     while not city_queue.empty():
         # A* search on the city with lowest cost
-        current_city = city_queue.get()
+        current_city = city_queue.get()[1]
         # If we found arrival, stop algorithm
         if current_city == arrival:
             break
@@ -102,7 +103,7 @@ def a_star(departure: str, arrival: str, distance_dict) -> [str, float]:
                 cost_so_far[neighbor.city_name] = new_cost
                 # Update the priority queue with new cost and distance
                 city_queue.put(
-                    neighbor.city_name, new_cost + distance_dict[neighbor.city_name]
+                    (new_cost + distance_dict[neighbor.city_name], neighbor.city_name)
                 )
                 last_stop[neighbor.city_name] = current_city
     # Finalizing desired information
